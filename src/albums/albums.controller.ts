@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbum } from './dto/create-album.dto';
 import { Album } from './interfaces/album.interface';
@@ -6,7 +6,7 @@ import { Album } from './interfaces/album.interface';
 @Controller('albums')
 export class AlbumsController {
   
-  constructor(private albumService: AlbumsService) {}
+  constructor(private readonly albumService: AlbumsService) {}
   
   @Get()
   async findAll(): Promise<Album[]> {
@@ -14,18 +14,18 @@ export class AlbumsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.albumService.findOne(id);
   }
   
-  // TODO: validation pipe
+  // TODO: trasformation pipe
   @Post()
   async create(@Body() album: CreateAlbum) {
     return this.albumService.create(album);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.albumService.delete(id);
   }
 }

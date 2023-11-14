@@ -1,9 +1,7 @@
-import { branca } from "../types/branca.type";
-
 export interface Album {
   id: string;
   name: string; 
-  branca: branca; 
+  branca: string; 
   data: Date; 
   place: string; 
   album_link: string;
