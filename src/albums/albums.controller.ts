@@ -21,7 +21,7 @@ export class AlbumsController {
   }
   
   @Post()
-  async create(@Body(new ValidationPipe) album: CreateAlbum) {
+  async create(@Body(new ValidationPipe()) album: CreateAlbum) {
     return this.albumService.create(album);
   }
 

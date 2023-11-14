@@ -1,8 +1,8 @@
-import { IsString, IsInt, IsDate, IsIn } from 'class-validator';
+import { IsString, IsInt, IsDate, IsIn, IsUrl, IsUUID } from 'class-validator';
 
 export class CreateAlbum {
   
-  @IsString()
+  @IsUUID()
   readonly id: string;
   
   @IsString()
@@ -17,9 +17,9 @@ export class CreateAlbum {
   @IsString()
   readonly place: string; 
   
-  @IsString()
+  @IsUrl()
   readonly album_link: string;
   
-  @IsString()
+  @IsUrl()
   readonly album_cover: string;
 }
