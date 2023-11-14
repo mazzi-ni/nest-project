@@ -11,8 +11,8 @@ export class CreateAlbum {
   @IsIn(['EG', 'LC', 'RS', 'COCA'])
   readonly branca: string; 
   
-  @IsDate()
-  readonly data: Date; 
+  @IsString()
+  readonly data: string; 
   
   @IsString()
   readonly place: string; 

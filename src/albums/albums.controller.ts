@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post } from '@nest
 import { AlbumsService } from './albums.service';
 import { CreateAlbum } from './dto/create-album.dto';
 import { Album } from './interfaces/album.interface';
+import { ValidationPipe } from './pipes/validation.pipe';
+
 
 @Controller('albums')
 export class AlbumsController {
@@ -18,9 +20,8 @@ export class AlbumsController {
     return this.albumService.findOne(id);
   }
   
-  // TODO: trasformation pipe
   @Post()
-  async create(@Body() album: CreateAlbum) {
+  async create(@Body(new ValidationPipe) album: CreateAlbum) {
     return this.albumService.create(album);
   }
 
