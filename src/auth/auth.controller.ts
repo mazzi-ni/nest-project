@@ -1,24 +1,34 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AuthGuard } from '../common/guards/auth.guard';
+import { ValidationPipe } from '../common/pipes/validation.pipe';
+import { TransformPipe } from '../common/pipes/transform.pipe';
+import { User } from './dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
-  async signIn(
-    @Body('email') email: string, 
-    @Body('pass') pass: string
-  ) {
-    return this.authService.signIn(email, pass);
+  async signIn(@Body(ValidationPipe) user: User) {
+    return this.authService.signIn(user);
   }
-
+  
+  // TODO: sistemare questo userDto perché ho fatto casino 
+  // FIX: rifare tutta la parte di user 
+  // -> user-dto x auth
+  // -> user-interface x users
+  @UsePipes(TransformPipe)
   @Post('register')
-  async register(
-    @Body('email') email: string, 
-    @Body('pass') pass: string
-  ) {
-    return this.authService.register(email, pass)  
+  async register(@Body(ValidationPipe) user: User) {
+    return this.authService.register(user); 
+  }
+  
+  // TODO: add Role !!
+  @UseGuards(AuthGuard)
+  @Get('users')
+  async findAll() {
+    return this.authService.findAll();
   }
 
 }

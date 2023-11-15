@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbum } from './dto/create-album.dto';
 import { Album } from './interfaces/album.interface';
 import { ValidationPipe } from '../common/pipes/validation.pipe';
+import { TransformPipe } from '../common/pipes/transform.pipe';
 import { AuthGuard } from '../common/guards/auth.guard';
-
 
 @Controller('albums')
 export class AlbumsController {
@@ -18,19 +18,20 @@ export class AlbumsController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.albumService.findOne(id);
   }
   
+  @UsePipes(TransformPipe)
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body(new ValidationPipe) album: CreateAlbum) {
+  async create(@Body(ValidationPipe) album: CreateAlbum) {
     return this.albumService.create(album);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async delete(@Param('id', new ParseUUIDPipe()) id: string) {
+  async delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.albumService.delete(id);
   }
 }

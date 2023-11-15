@@ -1,31 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './interface/user.interface';
-import { v4 } from 'uuid';
-import { CreateUser } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  private users: CreateUser[] = [
-    {
-      _id: v4(),
-      email: "andre.mazzq@gmail.com",
-      pass: "sas!1234",
-    }
-  ];
+  private users: User[] = [];
 
   async findOne(email: string): Promise<User | undefined> {
     return this.users.find(user => user.email === email);
   }
-
-  async create(email: string, pass: string) {
-    const saltOrRounds = 10;
-    const hash_user: CreateUser = {
-      _id: v4(),
-      email: email,
-      pass: await bcrypt.hash(pass, saltOrRounds),
+  
+  async create(user: User) {
+    if(this.users.find(u => u.email === user.email)) {
+      return ;
     }
-    return this.users.push(hash_user);
+
+    const saltOrRounds = 10;
+    const hash_user: User = {
+      _id: user._id,
+      email: user.email,
+      pass: await bcrypt.hash(user.pass, saltOrRounds),
+    }
+    this.users.push(hash_user);
   }
 
+  async findAll(): Promise<User[] | undefined> {
+    return this.users;
+  }
 }
