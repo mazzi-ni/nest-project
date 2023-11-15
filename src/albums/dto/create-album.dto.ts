@@ -3,7 +3,7 @@ import { IsString, IsInt, IsDate, IsIn, IsUrl, IsUUID } from 'class-validator';
 export class CreateAlbum {
   
   @IsUUID()
-  readonly id: string;
+  readonly _id: string;
   
   @IsString()
   readonly name: string; 

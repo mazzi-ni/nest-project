@@ -6,7 +6,10 @@ import { v4 as generate_uuid } from "uuid";
 @Injectable()
 export class ValidationPipe implements PipeTransform {
   async transform(value: any, { metatype }: ArgumentMetadata) {
-    value.id = generate_uuid();
+    value = {
+      _id: generate_uuid(),
+      ...value
+    }
 
     if (!metatype || !this.toValidate(metatype)) {
       return value;
@@ -20,7 +23,7 @@ export class ValidationPipe implements PipeTransform {
   }
 
   private toValidate(metatype: Function): boolean {
-    const types: Function[] = [String, Boolean, Number, Array, Object];
+    const types: Function[] = [String, Boolean, Number, Array, Object, Date];
     return !types.includes(metatype);
   }
 }
