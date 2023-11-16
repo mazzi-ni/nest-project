@@ -14,10 +14,6 @@ export class AuthController {
     return this.authService.signIn(user);
   }
   
-  // TODO: sistemare questo userDto perché ho fatto casino 
-  // FIX: rifare tutta la parte di user 
-  // -> user-dto x auth
-  // -> user-interface x users
   @UsePipes(TransformPipe)
   @Post('register')
   async register(@Body(ValidationPipe) user: User) {
