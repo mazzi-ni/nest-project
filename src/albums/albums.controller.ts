@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbum } from './dto/create-album.dto';
-import { Album } from './interfaces/album.interface';
 import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { TransformPipe } from '../common/pipes/transform.pipe';
 import { AuthGuard } from '../common/guards/auth.guard';
@@ -12,7 +11,7 @@ export class AlbumsController {
   
   @UseGuards(AuthGuard)
   @Get()
-  async findAll(): Promise<Album[]> {
+  async findAll() {
     return this.albumService.findAll();
   }
 
