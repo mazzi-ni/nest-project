@@ -1,18 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './interface/user.interface';
 import * as bcrypt from 'bcrypt';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { User } from './schemas/user.schema';
+import { Connection, Model } from 'mongoose';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    // @InjectConnection() private connection: Connection
+  ) {}
 
-  async findOne(email: string): Promise<User | undefined> {
-    return this.users.find(user => user.email === email);
+  async findOne(email: string): Promise<User | null> {
+    return this.userModel.where({ email }).findOne();
   }
   
-  async create(user: User) {
-    if(this.users.find(u => u.email === user.email)) {
-      return ;
+  async create(user: User): Promise<User> {
+    if(await this.findOne(user.email) !== null) {
+      return null;
     }
 
     const saltOrRounds = 10;
@@ -21,10 +26,10 @@ export class UsersService {
       email: user.email,
       pass: await bcrypt.hash(user.pass, saltOrRounds),
     }
-    this.users.push(hash_user);
+    return this.userModel.create(hash_user);
   }
 
-  async findAll(): Promise<User[] | undefined> {
-    return this.users;
+  async findAll(): Promise<User[]> {
+    return this.userModel.find();
   }
 }
