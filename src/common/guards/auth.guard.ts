@@ -26,6 +26,7 @@ export class AuthGuard implements CanActivate {
         { secret: process.env.JWT_CONSTANT }
       );
       request['user'] = payload;
+
     } catch {
       this.logger.error('Unotorized: token not correct');
       throw new UnauthorizedException();

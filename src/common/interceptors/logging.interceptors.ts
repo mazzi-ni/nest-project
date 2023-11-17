@@ -14,7 +14,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const user_agent = req.get('user-agent') || '';
     const { ip, method, path: url } = req;
     
-    this.logger.log(`request: 
+    this.logger.log(`Request: 
       ${method} ${url} ${user_agent} ${ip}: 
       ${name_controller} - ${name_handler}
     `);
