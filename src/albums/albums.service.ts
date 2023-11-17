@@ -1,29 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { Album } from './interfaces/album.interface';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Album } from './schemas/album.schema';
+import { Connection, Model } from 'mongoose';
 
 @Injectable()
 export class AlbumsService {
-  private albums: Album[] = [];
+
+  constructor(
+    @InjectModel(Album.name) private albumModel: Model<Album>,
+    // @InjectConnection() private connection: Connection
+  ) {}
   
-  findAll(): Album[] {
-    return this.albums; 
+  async findAll(): Promise<Album[]> {
+    return this.albumModel.find();
   }
 
-  findOne(id: string): Album | null {
-    return this.albums.find(album => album._id === id);
+  async findOne(_id: string): Promise<Album | null> {
+    return this.albumModel.findOne({ _id });
   }
 
-  delete(id: string): Album[] | null {
-    const index = this.albums.findIndex(x => x._id === id);
-    if (index > -1) {
-      return this.albums.splice(index, 1);
-    } 
-    return null;
+  async delete(_id: string): Promise<Object> {
+    return this.albumModel.deleteOne({ _id });
   }
   
-  create(album: Album): Album {
-    this.albums.push(album);
-    return album;
+  async create(album: Album): Promise<Album> {
+    return this.albumModel.create(album);
   }
 
 }
